@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f5f7fb">
+    <title>Taskflow | Team task tracking</title>
+    <link rel="stylesheet" href="/styles.css">
+    <script src="/app.js" defer></script>
+</head>
+<body>
+<main class="page-shell">
+    <section id="authView" class="auth-layout">
+        <div class="auth-intro">
+            <a class="brand" href="/" aria-label="Taskflow home">
+                <span class="brand-mark">T</span>
+                <span>taskflow</span>
+            </a>
+            <p class="eyebrow">Make teamwork move</p>
+            <h1>Good work happens when everyone knows what’s next.</h1>
+            <p class="intro-copy">Plan projects, share the load, and keep every task moving forward.</p>
+            <div class="intro-points">
+                <span><span class="point-icon">✓</span> Keep projects in sync</span>
+                <span><span class="point-icon">✓</span> Make ownership clear</span>
+                <span><span class="point-icon">✓</span> Share notes and files</span>
+            </div>
+            <div class="auth-art" aria-hidden="true">
+                <div class="art-card art-card-back"><span class="art-dot"></span><span></span><span></span></div>
+                <div class="art-card art-card-front">
+                    <span class="art-check">✓</span>
+                    <div><strong>Launch planning</strong><small>Completed just now</small></div>
+                    <span class="art-avatar">A</span>
+                </div>
+            </div>
+        </div>
+        <div class="auth-panel-wrap">
+            <div class="auth-panel">
+                <div class="mobile-brand brand">
+                    <span class="brand-mark">T</span><span>taskflow</span>
+                </div>
+                <p class="eyebrow">YOUR WORKSPACE</p>
+                <h2 id="authTitle">Welcome back</h2>
+                <p id="authSubtitle" class="muted">Sign in to pick up where you left off.</p>
+                <div class="auth-switch" role="tablist" aria-label="Account options">
+                    <button id="showLogin" class="switch-button active" type="button" role="tab">Sign in</button>
+                    <button id="showRegister" class="switch-button" type="button" role="tab">Create account</button>
+                </div>
+                <form id="loginForm" class="form-stack">
+                    <label>Email address
+                        <input name="email" type="email" autocomplete="email" placeholder="you@company.com" required>
+                    </label>
+                    <label>Password
+                        <input name="password" type="password" autocomplete="current-password" placeholder="Your password" required>
+                    </label>
+                    <button class="button button-primary button-wide" type="submit">Sign in <span aria-hidden="true">→</span></button>
+                </form>
+                <form id="registerForm" class="form-stack hidden">
+                    <label>Your name
+                        <input name="name" type="text" maxlength="100" autocomplete="name" placeholder="Alex Morgan" required>
+                    </label>
+                    <label>Email address
+                        <input name="email" type="email" autocomplete="email" placeholder="you@company.com" required>
+                    </label>
+                    <label>Password <span class="label-note">8 characters minimum</span>
+                        <input name="password" type="password" minlength="8" maxlength="72" autocomplete="new-password" placeholder="Create a password" required>
+                    </label>
+                    <button class="button button-primary button-wide" type="submit">Create account <span aria-hidden="true">→</span></button>
+                </form>
+                <p id="authMessage" class="message" role="status" aria-live="polite"></p>
+                <p class="auth-footnote">By continuing, you agree to keep your team’s work respectful and secure.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="appView" class="app-view hidden">
+        <header class="topbar">
+            <a class="brand" href="/" aria-label="Taskflow home">
+                <span class="brand-mark">T</span><span>taskflow</span>
+            </a>
+            <div class="topbar-right">
+                <button id="profileToggle" class="profile-button" type="button" aria-expanded="false">
+                    <span id="userAvatar" class="user-avatar">A</span>
+                    <span id="userName" class="profile-name">Account</span>
+                    <span class="chevron">⌄</span>
+                </button>
+                <button id="logoutButton" class="button button-quiet" type="button">Sign out</button>
+            </div>
+        </header>
+
+        <div id="profilePanel" class="profile-panel hidden">
+            <form id="profileForm" class="profile-form">
+                <strong>Your profile</strong>
+                <label>Name <input name="name" maxlength="100" required></label>
+                <label>Contact number <input name="contactNumber" maxlength="40"></label>
+                <button class="button button-primary button-small" type="submit">Save profile</button>
+            </form>
+        </div>
+
+        <div class="workspace">
+            <section class="welcome-row">
+                <div>
+                    <p class="eyebrow">YOUR WORKSPACE</p>
+                    <h1>Let’s get things done<span class="heading-period">.</span></h1>
+                    <p class="muted">A clear view of your team's work, all in one place.</p>
+                </div>
+                <button id="newTaskShortcut" class="button button-primary" type="button"><span class="plus">+</span> New task</button>
+            </section>
+
+            <div id="appMessage" class="message app-message" role="status" aria-live="polite"></div>
+
+            <section class="stats-grid" aria-label="Task overview">
+                <article class="stat-card">
+                    <span class="stat-icon stat-icon-blue">▤</span>
+                    <div><p>All tasks</p><strong id="allCount">0</strong></div>
+                    <span id="teamCount" class="stat-note">0 teams</span>
+                </article>
+                <article class="stat-card">
+                    <span class="stat-icon stat-icon-amber">◷</span>
+                    <div><p>In progress</p><strong id="progressCount">0</strong></div>
+                    <span class="stat-note">moving forward</span>
+                </article>
+                <article class="stat-card">
+                    <span class="stat-icon stat-icon-green">✓</span>
+                    <div><p>Completed</p><strong id="completedCount">0</strong></div>
+                    <span class="stat-note">nice work</span>
+                </article>
+            </section>
+
+            <div class="content-grid">
+                <section class="panel tasks-panel">
+                    <div class="panel-heading task-heading">
+                        <div>
+                            <p class="eyebrow">STAY ON TRACK</p>
+                            <h2>Tasks <span id="visibleCount" class="count-pill">0</span></h2>
+                        </div>
+                        <button id="newTaskButton" class="button button-primary button-small" type="button">＋ Add task</button>
+                    </div>
+                    <form id="filterForm" class="filter-row">
+                        <label class="search-input">
+                            <span aria-hidden="true">⌕</span>
+                            <input name="search" type="search" placeholder="Search tasks">
+                        </label>
+                        <select name="status" aria-label="Filter by status">
+                            <option value="">All statuses</option>
+                            <option value="OPEN">Open</option>
+                            <option value="IN_PROGRESS">In progress</option>
+                            <option value="COMPLETED">Completed</option>
+                        </select>
+                        <select id="teamFilter" name="teamId" aria-label="Filter by team">
+                            <option value="">All teams</option>
+                        </select>
+                        <label class="assigned-filter">
+                            <input name="assignedToMe" type="checkbox"> Assigned to me
+                        </label>
+                        <button class="button button-outline button-small" type="submit">Filter</button>
+                    </form>
+                    <div id="taskList" class="task-list" aria-live="polite"></div>
+                    <div id="emptyTasks" class="empty-state hidden">
+                        <span class="empty-icon">✳</span>
+                        <h3>No tasks found</h3>
+                        <p>Create a task or adjust your filters to see work here.</p>
+                        <button class="button button-outline button-small" type="button" data-action="clear-filters">Clear filters</button>
+                    </div>
+                </section>
+
+                <aside class="side-column">
+                    <section id="taskFormPanel" class="panel side-panel hidden">
+                        <div class="panel-heading">
+                            <div><p class="eyebrow">GET STARTED</p><h2>New task</h2></div>
+                            <button class="icon-button" type="button" data-close-task aria-label="Close task form">×</button>
+                        </div>
+                        <form id="taskForm" class="form-stack compact-form">
+                            <label>Task title
+                                <input name="title" maxlength="200" placeholder="What needs to be done?" required>
+                            </label>
+                            <label>Description
+                                <textarea name="description" rows="3" maxlength="10000" placeholder="Add a few details"></textarea>
+                            </label>
+                            <label>Due date
+                                <input name="dueDate" type="date">
+                            </label>
+                            <label>Team
+                                <select id="taskTeam" name="teamId">
+                                    <option value="">Personal task</option>
+                                </select>
+                            </label>
+                            <label>Assign to
+                                <select id="taskAssignee" name="assigneeEmail" disabled>
+                                    <option value="">Unassigned</option>
+                                </select>
+                                <span class="field-help">Assignees must already belong to the selected team.</span>
+                            </label>
+                            <div class="form-actions">
+                                <button class="button button-outline button-small" type="button" data-close-task>Cancel</button>
+                                <button class="button button-primary button-small" type="submit">Create task</button>
+                            </div>
+                        </form>
+                    </section>
+
+                    <section class="panel side-panel team-panel">
+                        <div class="panel-heading">
+                            <div><p class="eyebrow">WORK TOGETHER</p><h2>Your teams</h2></div>
+                            <span class="team-symbol">◎</span>
+                        </div>
+                        <div id="teamList" class="team-list"></div>
+                        <div id="emptyTeams" class="empty-inline">No teams yet. Create one to collaborate.</div>
+                        <form id="teamForm" class="form-stack compact-form team-create-form">
+                            <label>Team name
+                                <input name="name" maxlength="120" placeholder="e.g. Product team" required>
+                            </label>
+                            <label>Description <span class="label-note">optional</span>
+                                <input name="description" maxlength="2000" placeholder="What is this team working on?">
+                            </label>
+                            <label>Invite existing members <span class="label-note">optional</span>
+                                <input name="memberEmails" placeholder="sam@example.com, lee@example.com">
+                            </label>
+                            <button class="button button-outline button-small button-wide" type="submit">＋ Create a team</button>
+                        </form>
+                    </section>
+                </aside>
+            </div>
+            <footer class="footer-note">Made for teams that get things done.</footer>
+        </div>
+    </section>
+</main>
+</body>
+</html>
